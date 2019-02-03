@@ -38,6 +38,19 @@ Para instalar o Ionic CLI [globalmente](https://docs.npmjs.com/downloading-and-i
 $ npm install -g ionic
 ```
 
+Assim como realizado para o Nodejs e npm, a versão do Ionic CLI pode ser verificada:
+
+###### Versão do Ionic CLI
+```
+$ ionic info
+```
+> Ionic:
+>    ionic (Ionic CLI) : 4.2.1
+> System:
+>    NodeJS : v10.13.0
+>    npm    : 6.4.1
+>    OS     : Windows 10
+
 ##### Ionic Help
 
 Pode-se acessar o recurso de ajuda (*help*) do Ionic CLI por meio da instrução:
@@ -53,3 +66,4 @@ $ ionic <command> --help
 ```
 
 > Por exemplo, ```ionic start --help```
+
