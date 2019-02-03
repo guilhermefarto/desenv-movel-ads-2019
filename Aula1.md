@@ -51,6 +51,13 @@ Assim como realizado para o Nodejs e npm, a versão do Ionic CLI pode ser verifi
 $ ionic info
 ```
 
+ou
+
+###### Versão do Ionic CLI (via npm)
+```
+$ npm info ionic
+```
+
 ##### Ionic Help
 
 Pode-se acessar o recurso de ajuda (*help*) do Ionic CLI por meio da instrução:
