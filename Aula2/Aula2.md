@@ -86,3 +86,47 @@ $ ng g <type> --help
 * Diretório ```\app\home```: diretório (de exemplo) do *template* ```blank``` utilizado na criação do projeto
 
 > Neste diretório, podem ser localizados os ```home.module.ts```, ```home.page.html``` e ```home.page.ts``` de exemplo da aplicação
+
+### Alteração do conteúdo padrão (```home.page.html``` e ```home.page.ts```)
+
+Edite o arquivo ```home.page.html```, substituindo o código fonte original pelo fragmento:
+
+```xml
+<ion-content class="home">
+  <ion-card>
+    <ion-card-content>
+      Hello, {{name}}
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+```
+
+Edite o arquivo ```home.page.ts```, substituindo o código fonte original pelo fragmento:
+
+```typescript
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-home',
+  templateUrl: 'home.page.html',
+  styleUrls: ['home.page.scss'],
+})
+export class HomePage {
+
+  public name: string;
+
+  constructor() {
+    this.name = 'Ionic';
+  }
+}
+```
+
+Após salvar, podemos iniciar a execução da aplicação 'Hello, Ionic':
+
+#### Visual Studio Code
+
+1. Pressione <kbd>CTRL</kbd> + <kbd>'</kbd> (apóstrofe) ou acesse o menu ```Terminal``` > ```New terminal```;
+
+2. Execute a instrução (no terminal do Visual Studio Code): ```ionic serve``` ou ```ionic serve --lab```
+
+Consulte a [página sobre ```ionic serve```](https://ionicframework.com/docs/cli/commands/serve/) para detalhes
