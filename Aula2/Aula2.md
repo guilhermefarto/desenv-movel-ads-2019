@@ -40,4 +40,45 @@ $ ionic start hello-ionic blank
 
 ![Projeto 'Hello, Ionic' no Visual Studio Code](img/Image1_VSCode_HelloIonic.png)
 
-5.
+5. Navegue pelos diretórios e subdiretórios do projeto Ionic para conhecer sua estrutura
+
+> Em um novo projeto, os principais arquivos a serem analisados são:
+
+* ```package.json```: arquivo responsável pela definição de dependências e bibliotecas do projeto;
+* ```main.ts```: arquivo responsável pela inicialização da aplicação;
+
+> Este arquivo quem define o fluxo inicial da página de abertura da aplicação
+
+> ```main.ts```
+
+> ```platformBrowserDynamic().bootstrapModule(AppModule)```
+
+> ```app.module.ts```
+
+> ```app.component.ts```
+
+> ```app.component.html```
+
+> ```app-routing.module.ts```
+
+* Diretório ```\app\```: diretório que contém os arquivos da aplicação, incluindo páginas HTML, arquivos Javascript (.js) e Typescript (.ts), componentes, serviços e outros artefatos de desenvolvimento
+
+> Tais artefatos podem ser gerados (criados) por meio da instrução:
+
+```
+$ ionic generate <type> <name> [options]
+```
+
+Consulte a [página sobre ```ionic generate```](https://ionicframework.com/docs/cli/commands/generate/) para detalhes
+
+Também é possível verificar os tipos de artefatos da instrução ```ionic generate``` via terminal:
+
+```
+$ ng g --help
+```
+
+ou
+
+```
+$ ng g <type> --help
+```
