@@ -5,10 +5,20 @@ Repositório com conteúdo da disciplina de **Desenvolvimento Móvel**
 
 Prof. Guilherme de Cleva Farto, MSc. ([guilherme.farto@gmail.com](mailto:guilherme.farto@gmail.com))
 
-## Aulas
+## Aulas (conteúdo programático)
 
 - [X] Introdução à computação móvel
 - [ ] Plataforma Ionic (instalação e configuração)
+- [ ] Hello, Ionic
+- [ ] Ionic CLI
+- [ ] Javascript e Typescript para dispositivos móveis
+- [ ] Componentes e layouts
+- [ ] Componentes customizados
+- [ ] Bancos de dados embarcados (IndexedDB)
+- [ ] APIs com Java, Spring Boot e MongoDB
+- [ ] Integração de aplicações móveis com APIs
+- [ ] Componentes de hardware
+- [ ] UX e Design Thinking para computação móvel
 
 ## Links
 
