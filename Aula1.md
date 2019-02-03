@@ -38,6 +38,12 @@ Para instalar o Ionic CLI [globalmente](https://docs.npmjs.com/downloading-and-i
 $ npm install -g ionic
 ```
 
+Para especificar o uso da último versão disponível, execute:
+
+```
+$ npm install -g ionic@latest
+```
+
 Assim como realizado para o Nodejs e npm, a versão do Ionic CLI pode ser verificada:
 
 ###### Versão do Ionic CLI
