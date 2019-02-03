@@ -5,6 +5,13 @@ Repositório com conteúdo da disciplina de **Desenvolvimento Móvel**
 
 Prof. Guilherme de Cleva Farto, MSc. ([guilherme.farto@gmail.com](mailto:guilherme.farto@gmail.com))
 
+## Objetivos e competências
+
+- Proporcionar experiências para o desenvolvimento de aplicações móveis nas plataformas Google Android e Ionic
+- Explorar e aplicar conceitos tecnológicos relacionados à computação móvel, como a integração com soluções Web
+- Explorar os recursos para criação de componentes customizados e extensíveis em computação móvel
+- Explorar a interoperabilidade com aplicações móveis por meio de WebServices e APIs
+
 ## Aulas (conteúdo programático)
 
 - ✅ Introdução à computação móvel
