@@ -15,8 +15,8 @@ Prof. Guilherme de Cleva Farto, MSc. ([guilherme.farto@gmail.com](mailto:guilher
 ## Aulas (conteúdo programático)
 
 - ✅ Introdução à computação móvel
-- ✅ [Plataforma Ionic (instalação e configuração)](Aula1.md)
-- ✅ [Hello, Ionic](Aula2.md)
+- ✅ [Plataforma Ionic (instalação e configuração)](Aula1/Aula1.md)
+- ✅ [Hello, Ionic](Aula2/Aula2.md)
 - 📝 Ionic CLI
 - 📝 Javascript e Typescript para dispositivos móveis
 - 📝 Componentes e layouts
