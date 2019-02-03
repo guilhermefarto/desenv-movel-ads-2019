@@ -38,6 +38,6 @@ $ ionic start hello-ionic blank
 
 4. Abrir o diretório do projeto ```..\desenvmovel\workspace\hello-ionic``` via Visual Studio Code (ou IDE de preferência);
 
-![GitHub Logo](img/Image1_VSCode_HelloIonic.png)
+![Projeto 'Hello, Ionic' no Visual Studio Code](img/Image1_VSCode_HelloIonic.png | width=100)
 
 5.
