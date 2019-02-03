@@ -127,6 +127,8 @@ Após salvar, podemos iniciar a execução da aplicação 'Hello, Ionic':
 
 1. Pressione <kbd>CTRL</kbd> + <kbd>'</kbd> (apóstrofe) ou acesse o menu ```Terminal``` > ```New terminal```;
 
-2. Execute a instrução (no terminal do Visual Studio Code): ```ionic serve``` ou ```ionic serve --lab```
+2. Execute a instrução (no terminal do Visual Studio Code): ```ionic serve```;
+
+3. Execute a instrução (no terminal do Visual Studio Code): ```ionic serve --lab``` (necessário confirmar instalação);
 
 Consulte a [página sobre ```ionic serve```](https://ionicframework.com/docs/cli/commands/serve/) para detalhes
