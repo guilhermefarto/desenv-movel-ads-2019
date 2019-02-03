@@ -44,12 +44,6 @@ Assim como realizado para o Nodejs e npm, a versão do Ionic CLI pode ser verifi
 ```
 $ ionic info
 ```
-> Ionic:
->    ionic (Ionic CLI) : 4.2.1
-> System:
->    NodeJS : v10.13.0
->    npm    : 6.4.1
->    OS     : Windows 10
 
 ##### Ionic Help
 
