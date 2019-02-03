@@ -82,3 +82,7 @@ ou
 ```
 $ ng g <type> --help
 ```
+
+* Diretório ```\app\home```: diretório (de exemplo) do *template* ```blank``` utilizado na criação do projeto
+
+> Neste diretório, podem ser localizados os ```home.module.ts```, ```home.page.html``` e ```home.page.ts``` de exemplo da aplicação
