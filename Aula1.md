@@ -38,7 +38,7 @@ Para instalar o Ionic CLI [globalmente](https://docs.npmjs.com/downloading-and-i
 $ npm install -g ionic
 ```
 
-###### Ionic Help
+##### Ionic Help
 
 Pode-se acessar o recurso de ajuda (*help*) do Ionic CLI por meio da instrução:
 
