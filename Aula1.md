@@ -29,3 +29,27 @@ $ npm --version
 > 6.4.1
 
 #### 2. Ionic CLI (*Command Line Interface*)
+
+Após instalação do ambiente Nodejs e npm, deve-se instalar a ferramenta **Ionic CLI**, uma interface de comandos específica para a plataforma Ionic que possui ferramentas e utilitários para desenvolvedores
+
+Para instalar o Ionic CLI [globalmente](https://docs.npmjs.com/downloading-and-installing-packages-globally), execute a instrução:
+
+```
+$ npm install -g ionic
+```
+
+###### Ionic Help
+
+Pode-se acessar o recurso de ajuda (*help*) do Ionic CLI por meio da instrução:
+
+```
+$ ionic --help
+```
+
+Além disto, também se pode especificar o comando desejado na consulta:
+
+```
+$ ionic <command> --help
+```
+
+> Por exemplo, ```ionic start --help```
