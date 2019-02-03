@@ -59,5 +59,5 @@ Prof. Guilherme de Cleva Farto, MSc. ([guilherme.farto@gmail.com](mailto:guilher
 
 #### Acervo bibliográfico (FEMA)
 
-Jochen Burkhardt. **Pervasive computing: Technology and architecture of mobile internet applications**. Addison-Wesley, 2002
 Uwe Hansmann. **Pervasive computing: The mobile world**. Springer, 2001
+Jochen Burkhardt. **Pervasive computing: Technology and architecture of mobile internet applications**. Addison-Wesley, 2002
