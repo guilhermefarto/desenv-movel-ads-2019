@@ -10,4 +10,10 @@ $ ionic start <app-name> <template>
 
 Por padrão, os valores ```blank```, ```tabs``` e ```sidemenu``` podem ser informados como *templates*
 
+A listagem completa pode ser consulta por meio da instrução:
+
+```
+$ ionic start --list
+```
+
 Consulte a [documentação oficial da instrução ```ionic start```](https://ionicframework.com/docs/cli/commands/start)
