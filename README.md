@@ -27,6 +27,11 @@ Prof. Guilherme de Cleva Farto, MSc. ([guilherme.farto@gmail.com](mailto:guilher
 - 📝 Componentes de hardware
 - 📝 UX e Design Thinking para computação móvel
 
+#### Exercícios e atividades
+
+- [ ] 11/2 - Instalação e configuração do ambiente de desenvolvimento (Nodejs, npm, Ionic e Visual Studio Code)
+- [ ] 11/2 - Criação e execução do projeto 'Hello, Ionic' (```ionic start``` e ```ionic serve```)
+
 #### Atividades Discentes
 
 - 🔔 Trabalhos e pesquisas extra-classe
