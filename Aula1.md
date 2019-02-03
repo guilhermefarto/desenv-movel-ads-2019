@@ -74,3 +74,13 @@ $ ionic <command> --help
 
 > Por exemplo, ```ionic start --help```
 
+#### 3. Visual Studio Code
+
+[**Visual Studio Code**](https://code.visualstudio.com/) é uma das IDEs que mais se destacam como editor de código fonte em um projeto Ionic
+
+Há alternativas, menos utilizadas (até o momento) como, por exemplo:
+
+* [Atom](https://atom.io/)
+* [WebStorm](https://www.jetbrains.com/webstorm/)
+* [ALM](http://alm.tools/)
+* [Angular IDE by Webclipse](https://www.genuitec.com/products/angular-ide/)
