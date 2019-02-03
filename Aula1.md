@@ -20,10 +20,12 @@ Para verificar se o ambiente já está configurado com Nodejs e npm, execute as 
 ```
 $ node --version
 ```
+> v10.13.0
 
 ###### Versão do npm
 ```
 $ npm --version
 ```
+> 6.4.1
 
 #### 2. Ionic CLI (*Command Line Interface*)
