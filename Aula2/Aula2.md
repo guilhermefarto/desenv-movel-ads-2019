@@ -42,7 +42,7 @@ $ ionic start hello-ionic blank
 
 5. Navegue pelos diretórios e subdiretórios do projeto Ionic para conhecer sua estrutura
 
-> Em um novo projeto, os principais arquivos a serem analisados são:
+Em um novo projeto Ionic, os principais arquivos a serem analisados são:
 
 * ```package.json```: arquivo responsável pela definição de dependências e bibliotecas do projeto;
 * ```main.ts```: arquivo responsável pela inicialização da aplicação;
