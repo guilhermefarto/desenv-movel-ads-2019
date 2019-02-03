@@ -56,3 +56,8 @@ Prof. Guilherme de Cleva Farto, MSc. ([guilherme.farto@gmail.com](mailto:guilher
 - Reto Meier. **Professional Android**. Wrox, 2018
 - Ricardo Lecheta. **Android Essencial**. Novatec, 2016
 - Ricardo Lecheta. **Google Android**. Novatec, 2015
+
+#### Acervo bibliográfico (FEMA)
+
+Jochen Burkhardt. Pervasive computing : Technology and architeture of mobile internet apllications. Addison-Wesley, 2002
+Uwe Hansmann. Pervasive computing : The mobile world. Springer, 2001
