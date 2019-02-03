@@ -40,6 +40,15 @@ Prof. Guilherme de Cleva Farto, MSc. ([guilherme.farto@gmail.com](mailto:guilher
 - Jim Webber. **REST in Practice: Hypermedia and Systems Architecture**. O'Reilly, 2010
 - Robert Daigneau. **Service Design Patterns: Fundamental Design Solutions for SOAP/WSDL and RESTful Web Services**. Addison-Wesley Professional, 2011
 
+#### User Experience (UX) e Design Thinking
+
+- Tim Brown. **Design Thinking**. Elsevier, 2010
+- Tom Kelley, David Kelley. **Confiança Criativa**. HSM, 2014
+- Tennyson Pinheiro, Luis Alt. **Design Thinking no Brasil**. Campus, 2012
+- Marc Stickdorn, Jakob Schneider. **This is Service Design Thinking**. BIS Publishers, 2011
+- Tina Seelig. **inGenius**. HarperOne, 2012
+- Alexander Osterwalder. **Business Model Generation**. John Wiley and Sons, 2010
+
 #### Plataforma Android
 
 - John Horton. **Android Programming for Beginners**. Packt, 2015
