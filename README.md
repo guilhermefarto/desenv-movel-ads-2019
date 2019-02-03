@@ -27,6 +27,18 @@ Prof. Guilherme de Cleva Farto, MSc. ([guilherme.farto@gmail.com](mailto:guilher
 - 📝 Componentes de hardware
 - 📝 UX e Design Thinking para computação móvel
 
+#### Atividades Discentes
+
+- 🔔 Trabalhos e pesquisas extra-classe
+- 🔔 Resenhas de trabalhos e experimentos
+- 🔔 Atividades em sala de aula
+
+#### Avaliação
+
+- 👾 Provas semestrais
+- 👾 Projetos práticos
+- 👾 Seminários
+
 ## Links
 
 - **Developer Android**. Disponível em [https://developer.android.com/](https://developer.android.com/)
@@ -78,3 +90,5 @@ Prof. Guilherme de Cleva Farto, MSc. ([guilherme.farto@gmail.com](mailto:guilher
 
 Uwe Hansmann. **Pervasive computing: The mobile world**. Springer, 2001
 Jochen Burkhardt. **Pervasive computing: Technology and architecture of mobile internet applications**. Addison-Wesley, 2002
+
+
