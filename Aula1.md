@@ -78,7 +78,7 @@ $ ionic <command> --help
 
 [**Visual Studio Code**](https://code.visualstudio.com/) é uma das IDEs que mais se destacam como editor de código fonte em um projeto Ionic
 
-Há alternativas, menos utilizadas (até o momento) como, por exemplo:
+Há alternativas como, por exemplo:
 
 * [Atom](https://atom.io/)
 * [WebStorm](https://www.jetbrains.com/webstorm/)
