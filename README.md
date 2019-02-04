@@ -29,6 +29,7 @@ Prof. Guilherme de Cleva Farto, MSc. ([guilherme.farto@gmail.com](mailto:guilher
 
 #### Exercícios e atividades
 
+- [ ] 4/2 - Gerar ideias (processo de ideação / prototipação) sobre projeto "FEMA:go()"
 - [ ] 11/2 - Responder ao [formulário sobre conhecimentos](https://goo.gl/forms/iOvWUzzMEGPCUzNc2)
 - [ ] 11/2 - Instalar e configurar o ambiente de desenvolvimento (Nodejs, npm, Ionic e Visual Studio Code)
 - [ ] 11/2 - Criar e executar o projeto 'Hello, Ionic' (```ionic start``` e ```ionic serve```)
