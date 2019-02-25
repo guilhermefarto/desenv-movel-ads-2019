@@ -1,0 +1,221 @@
+
+ionic start meus-estudos blank
+
+ionic cordova platform
+
+ionic serve --lab
+
+---
+
+ionic generate page pages/login
+
+* mover a pasta 'home' também para o diretório 'pages'
+
+* editar rotas de páginas em 'app-routing.module.ts'
+
+* acrescentar 'imports' de 'FormsModule' e 'ReactiveFormsModule' nos arquivos de módulos
+	('app.module.ts', 'login.module.ts', 'home.module.ts'):
+
+    FormsModule,
+    ReactiveFormsModule,
+
+* criar diretório 'models' e classe 'Usuario.ts'
+
+	export class Usuario {
+
+	    login: string;
+	    password: string;
+
+	}
+
+* editar html da página 'login' para:
+
+	<ion-content>
+
+	  <ion-card>
+
+	    <ion-card-content>
+	      <form [formGroup]="loginForm">
+	        <ion-list lines="none">
+	          <ion-item>
+	            <ion-label color="dark">
+	              <ion-icon name="person"></ion-icon>
+	            </ion-label>
+	            <ion-input formControlName="login" type="text" placeholder="Usuário" clearInput></ion-input>
+	          </ion-item>
+
+	          <ion-item>
+	            <ion-label color="dark">
+	              <ion-icon name="key"></ion-icon>
+	            </ion-label>
+	            <ion-input formControlName="password" type="password" placeholder="Senha" clearInput></ion-input>
+	          </ion-item>
+	        </ion-list>
+
+	        <ion-button color="primary" expand="full" (click)="doConfirmar()">Confirmar</ion-button>
+	      </form>
+	    </ion-card-content>
+
+	  </ion-card>
+
+	</ion-content>
+
+* editar css da página 'login' para:
+
+	ion-card {
+	    margin-top: 40px;
+	}
+
+* editar implementação da página 'login' para:
+
+  loginForm: FormGroup;
+
+  usuario: Usuario;
+
+  constructor(
+    private formBuilder: FormBuilder,
+  ) {
+    this.loginForm = this.formBuilder.group({
+      login: ['', Validators.required],
+      password: ['', Validators.required],
+    });
+  }
+
+  ngOnInit() {
+  }
+
+  doConfirmar() {
+    this.usuario = this.loginForm.getRawValue() as Usuario;
+
+    alert(JSON.stringify(this.usuario));
+  }
+
+* criar serviço/provedor para regras de 'login'
+
+ionic generate service ../providers/login/login
+
+* implementar serviço/provedor 'login'
+
+  constructor() { }
+
+  validar(usuario: Usuario): Observable<boolean> {
+
+    return Observable.create((observer: any) => {
+      if (usuario.password === '123') {
+        observer.next(true);
+      } else {
+        observer.error('Falha na autenticação do usuário.');
+      }
+    });
+  }
+
+* alterar implementação do método 'doConfirmar' na página de 'login':
+
+  doConfirmar() {
+    this.usuario = this.loginForm.getRawValue() as Usuario;
+
+    // alert(JSON.stringify(this.usuario));
+
+    this.loginService.validar(this.usuario).subscribe((result) => {
+      if (result) {
+      }
+    }, (error) => {
+      alert(error);
+
+      this.loginForm.reset();
+    });
+  }
+
+* criar serviço/provedor para regras de 'nav-data'
+
+ionic generate service ../providers/nav-data/nav-data
+
+* implementar serviço/provider 'nav-data'
+
+	export class NavDataService {
+
+	  data: any;
+
+	  constructor() { }
+	}
+
+* alterar implementação do método 'doConfirmar' na página de 'login':
+
+    this.loginService.validar(this.usuario).subscribe((result) => {
+      if (result) {
+        this.navData.data = this.usuario;
+        this.navController.navigateRoot('home');
+      }
+    }, (error) => {
+      alert(error);
+
+      this.loginForm.reset();
+    });
+
+* alterar implementação da página 'home'
+
+	export class HomePage implements OnInit {
+
+	  usuario: Usuario;
+
+	  constructor(
+	    private navController: NavController,
+	    private navData: NavDataService,
+	  ) {
+
+	    this.usuario = this.navData.data;
+
+	  }
+
+	  ngOnInit(): void {
+	  }
+
+	  doSair() {
+	    this.navController.navigateRoot('login');
+	  }
+
+	}
+
+* alterar html da página 'home':
+
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Meus Estudos
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+
+  <ion-label>Olá, {{usuario.login}}</ion-label>
+
+  <ion-grid padding>
+    <ion-row>
+      <ion-col>
+        <ion-button color="primary" expand="full">Notícias</ion-button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-button color="primary" expand="full">Eventos</ion-button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-button color="primary" expand="full">Notas</ion-button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-button color="danger" expand="full" (click)="doSair()">Sair</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>
+
+[done]
