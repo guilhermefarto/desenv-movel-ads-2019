@@ -1,0 +1,104 @@
+﻿
+ionic serve --lab
+
+---
+
+* instalar cordova (para devapp)
+
+ionic cordova platform
+npm install
+
+* criar classe 'Noticia.ts'
+
+export class Noticia {
+
+    titulo: string;
+    resumo: string;
+    link: string;
+
+}
+
+* criar página 'noticias-list'
+
+ionic generate page pages/noticias/noticias-list
+
+* acrescentar evento de clique no botão 'Notícias' na página 'home'
+
+<ion-button color="primary" expand="full" (click)="doExibirNoticias()">Notícias</ion-button>
+
+doExibirNoticias() {
+    this.navController.navigateForward('noticias-list');
+}
+
+* criar serviço/provedor para regras de 'noticias-list'
+
+ionic generate service ../providers/noticias/noticias
+
+* implementar serviço/provedor para regras de 'noticias-list'
+
+doSelecionarTodas(): Observable<Noticia[]> {
+    return Observable.create((observer: any) => {
+      let noticias: Noticia[] = [
+        { titulo: '', resumo: '', link: '' },
+        { titulo: '', resumo: '', link: '' },
+        { titulo: '', resumo: '', link: '' },
+      ];
+
+      observer.next(noticias);
+    });
+}
+
+* importar e implementar uso de serviço/provedor na página 'noticias-list'
+
+  noticias: Noticia[];
+
+  constructor(
+    private noticiasService: NoticiasService,
+  ) { }
+
+  ngOnInit() {
+    this.noticiasService.doSelecionarTodas().subscribe((noticias) => {
+      this.noticias = noticias;
+    });
+  }
+
+  abrirLinkNoticia(link: string) {
+    window.open(link, '_system');
+  }
+
+* implementar página 'noticias-list' com componente 'ion-card'
+
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Notícias</ion-title>
+
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content no-padding>
+
+  <ion-card *ngFor="let noticia of noticias">
+    <ion-card-header>
+      <ion-card-subtitle (click)="abrirLinkNoticia(noticia.link)">{{noticia.titulo}}</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+        {{noticia.resumo}}
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>
+
+* implementar folha de estilo para página 'noticias-list'
+
+ion-card-subtitle {
+    color: black;
+}
+
+ion-card-content {
+    color: black;
+    font-size: 0.8em !important;
+}
