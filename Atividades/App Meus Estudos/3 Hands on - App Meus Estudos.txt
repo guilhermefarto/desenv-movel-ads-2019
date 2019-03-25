@@ -1,0 +1,158 @@
+
+ionic serve --lab
+
+---
+
+* criar página 'meus-dados'
+
+ionic generate page pages/usuario/meus-dados
+
+---
+
+* acrescentar botão na página 'home.page.html'
+
+ionic generate page pages/usuario/meus-dados
+
+---
+
+* editar cabeçalho da página 'meus-dados.page.html'
+
+  <ion-toolbar>
+    <ion-title>Meus dados</ion-title>
+
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+---
+
+* editar cabeçalho da página 'home.page.html'
+
+  <ion-toolbar>
+    <ion-title>
+      Meus Estudos
+    </ion-title>
+
+    <ion-buttons slot="primary">
+      <ion-button color="dark" (click)="doExibirMeusDados()">
+        <ion-icon slot="icon-only" name="contact"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+* editar página 'home.page.ts'
+
+  doExibirMeusDados() {
+    this.navController.navigateForward('meus-dados');
+  }
+
+---
+
+* adicionar ReactiveFormsModule nos 'imports' do arquivo 'meus-dados.module.ts'
+
+@NgModule({
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    IonicModule,
+    RouterModule.forChild(routes)
+  ],
+  declarations: [MeusDadosPage]
+})
+export class MeusDadosPageModule {}
+
+---
+
+* editar página 'meus-dados.page.html'
+
+> modificar cabeçalho
+
+  <ion-toolbar>
+    <ion-title>Meus dados</ion-title>
+
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+
+    <ion-buttons slot="primary">
+      <ion-button color="dark">
+        <ion-icon slot="icon-only" name="save"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+> acrescentar formulário
+
+  <form [formGroup]="meusDadosForm">
+    <ion-list>
+      <ion-item>
+        <ion-label color="dark">
+          <ion-icon name="key"></ion-icon>
+        </ion-label>
+        <ion-input type="text" formControlName="login" placeholder="Usuário" clearInput></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label color="dark">
+          <ion-icon name="person"></ion-icon>
+        </ion-label>
+        <ion-input type="text" formControlName="name" placeholder="Nome" clearInput></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label color="dark">
+          <ion-icon name="link"></ion-icon>
+        </ion-label>
+        <ion-input type="text" formControlName="email" placeholder="E-mail" clearInput></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label color="dark">
+          <ion-icon name="key"></ion-icon>
+        </ion-label>
+        <ion-input type="password" formControlName="password" placeholder="Senha" clearInput></ion-input>
+      </ion-item>
+    </ion-list>
+  </form>
+
+* editar página 'meus-dados.page.ts'
+
+  meusDadosForm: FormGroup;
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private navController: NavController,
+  ) {
+    this.meusDadosForm = this.formBuilder.group({
+      login: ['', Validators.required],
+      name: ['', Validators.required],
+      email: ['', Validators.required],
+      password: ['', Validators.required],
+    });
+  }
+
+---
+
+* implementar método 'doSalvar()' na página 'meus-dados.page.ts'
+
+  doSalvar() {
+    let userData = this.meusDadosForm.getRawValue() as any;
+
+    console.log(userData);
+
+    this.navController.navigateBack('home');
+  }
+
+* modificar cabeçalho da página 'meus-dados.page.html'
+
+  ...
+    <ion-buttons slot="primary">
+      <ion-button color="dark" (click)="doSalvar()">
+        <ion-icon slot="icon-only" name="save"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  ...
+
+---
