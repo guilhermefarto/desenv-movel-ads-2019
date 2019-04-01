@@ -1,0 +1,181 @@
+
+ionic serve --lab
+
+---
+
+* instalar dependência de Storage (banco de dados)
+
+npm install --save @ionic/storage
+
+* adicionar módulo 'IonicStorageModule' na área de imports do arquivo 'app.module.ts'
+
+    import { IonicStorageModule } from '@ionic/storage';
+
+    ...
+
+    IonicStorageModule.forRoot({
+      name: 'meus-estudos-db',
+      storeName: 'preferences',
+      driverOrder: ['indexeddb', 'sqlite', 'websql']
+    }),
+
+---
+
+* criar serviço/provedor para persistência de preferências
+
+ionic generate service ../providers/prefs/preferences
+
+---
+
+* implementar serviço/provedor 'PreferencesService'
+
+  import { Storage } from '@ionic/storage';
+
+  ...
+
+  constructor(
+    private storage: Storage
+  ) { }
+
+  save(key: string, value: any): Observable<any> {
+    return Observable.create((observer: any) => {
+      this.storage.set(key, value).then((data) => {
+        observer.next(value);
+      });
+    });
+  }
+
+  get(key: string): Observable<any> {
+    return Observable.create((observer: any) => {
+      this.storage.get(key).then((data) => {
+        observer.next(data);
+      });
+    });
+  }
+
+  remove(key: string): Observable<any> {
+    return Observable.create((observer: any) => {
+      this.storage.remove(key).then((data) => {
+        observer.next(data);
+      });
+    });
+  }
+
+  clear(): Observable<any> {
+    return Observable.create((observer: any) => {
+      this.storage.clear().then(() => {
+        observer.next();
+      });
+    });
+  }
+
+  keys(): Observable<Array<string>> {
+    return Observable.create((observer: any) => {
+      this.storage.keys().then((data) => {
+        observer.next(data);
+      });
+    });
+  }
+
+---
+
+* editar classe 'Usuario' para adicionar atributos
+
+export class Usuario {
+
+    login: string;
+    password: string;
+    name: string;
+    email: string;
+}
+
+---
+
+* editar página 'login.page.ts' para salvar usuário logado
+
+  constructor(
+  	...
+    private preferencesService: PreferencesService,
+  ) {
+
+  ...
+
+    this.loginService.validar(this.usuario).subscribe((result) => {
+      if (result) {
+        this.preferencesService.save('logged-user', this.usuario).subscribe(() => {
+          this.navData.data = this.usuario;
+          this.navController.navigateRoot('home');
+        });
+      }
+    }, (error) => {
+      alert(error);
+
+      this.loginForm.reset();
+    });
+
+  ...
+
+  ngOnInit() {
+    this.preferencesService.get('logged-user').subscribe((data: Usuario) => {
+      if (data) {
+        this.loginForm.setValue(data);
+      }
+    });
+  }
+
+---
+
+* editar página 'meus-dados.page.ts' para salvar dados do usuário
+
+  constructor(
+    ...
+    private preferencesService: PreferencesService,
+  ) {
+
+  ...
+
+  ngOnInit() {
+    this.preferencesService.get('logged-user').subscribe((data: Usuario) => {
+      if (data) {
+        this.preferencesService.get('users').subscribe((users: Usuario[]) => {
+          if (users !== undefined && users !== null) {
+            let userIndex = users.findIndex(user => user.login === data.login);
+
+            if (userIndex !== -1) {
+              data = users[userIndex];
+            }
+          }
+
+          this.meusDadosForm.patchValue(data);
+        });
+      }
+    });
+  }
+
+  ...
+
+  doSalvar() {
+    let userData = this.meusDadosForm.getRawValue() as Usuario;
+
+    console.log(userData);
+
+    this.preferencesService.get('users').subscribe((users: Usuario[]) => {
+      if (users === undefined || users === null) {
+        users = [];
+      }
+
+      let userIndex = users.findIndex(user => user.login === userData.login);
+
+      if (userIndex !== -1) {
+        users[userIndex] = userData
+      } else {
+        users.push(userData);
+      }
+
+      this.preferencesService.save('users', users).subscribe(() => {
+        this.navController.navigateBack('home');
+      });
+    });
+  }
+
+---
