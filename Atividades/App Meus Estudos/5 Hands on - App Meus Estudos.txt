@@ -1,0 +1,317 @@
+
+ionic serve --lab
+
+---
+
+* criar página 'eventos-list'
+
+ionic generate page pages/eventos/eventos-list
+
+---
+
+* adicionar evento para exibir página 'eventos-list' na home
+
+<ion-button color="primary" expand="full" (click)="doExibirEventos()">Eventos</ion-button>
+
+...
+
+  doExibirEventos() {
+    this.navController.navigateForward('eventos-list');
+  }
+
+---
+
+* editar página 'eventos-list' para adicionar cabeçalho
+
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Eventos</ion-title>
+
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+
+    <ion-buttons slot="primary">
+      <ion-button color="dark" (click)="doIncluir()">
+        <ion-icon slot="icon-only" name="add-circle"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+---
+
+* criar classe 'Evento.ts'
+
+export class Evento {
+
+    codigo: string;
+    titulo: string;
+    tipo: string;
+    local: string;
+    data: string;
+    pago: boolean;
+}
+
+---
+
+* criar serviço/provedor para regras de 'eventos-list'
+
+ionic generate service ../providers/eventos/eventos
+
+---
+
+* implementar serviço/provedor 'EventosService'
+
+  constructor(
+    private preferencesService: PreferencesService,
+  ) { }
+
+  consultarEventos(): Observable<Evento[]> {
+    return Observable.create((observer: any) => {
+      this.preferencesService.get('eventos').subscribe((eventos: Evento[]) => {
+        observer.next(eventos);
+      });
+    });
+  }
+
+  salvarEvento(novoEvento: Evento): Observable<Evento[]> {
+    return Observable.create((observer: any) => {
+      this.preferencesService.get('eventos').subscribe((eventos: Evento[]) => {
+        if (eventos === undefined || eventos === null) {
+          eventos = [];
+        }
+
+        let eventoIndex = eventos.findIndex(evento => evento.codigo === novoEvento.codigo);
+
+        if (eventoIndex !== -1) {
+          eventos[eventoIndex] = novoEvento;
+        } else {
+          eventos.push(novoEvento);
+        }
+
+        this.preferencesService.save('eventos', eventos).subscribe(() => {
+          observer.next(eventos);
+        });
+      });
+    });
+  }
+
+  removerEvento(codigo: string): Observable<Evento[]> {
+    return Observable.create((observer: any) => {
+      this.preferencesService.get('eventos').subscribe((eventos: Evento[]) => {
+        if (eventos === undefined || eventos === null) {
+          eventos = [];
+        }
+
+        eventos = eventos.filter(evento => evento.codigo !== codigo);
+
+        this.preferencesService.save('eventos', eventos).subscribe(() => {
+          observer.next(eventos);
+        });
+      });
+    });
+  }
+}
+
+---
+
+* implementar uso do serviço/provedor 'EventosService' na página 'eventos-list'
+
+<ion-content no-padding>
+
+  <ion-card *ngFor="let evento of eventos">
+    <ion-card-header>
+      <ion-card-subtitle>{{evento.titulo}}</ion-card-subtitle>
+
+      <ion-buttons float-right>
+        <ion-button fill="clear" color="danger" (click)="doRemover(evento.codigo)" size="small">
+          <ion-icon name="remove-circle"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-row>
+        {{evento.local}} - {{evento.data}}
+      </ion-row>
+
+      <ion-row>
+        <ion-chip color="primary">
+          <ion-icon name="navigate"></ion-icon>
+          <ion-label>{{evento.tipo}}</ion-label>
+        </ion-chip>
+
+        <ion-chip *ngIf="evento.pago === true" color="success">
+          <ion-icon name="cash"></ion-icon>
+          <ion-label>{{evento.pago ? 'Pago' : 'Gratuito'}}</ion-label>
+        </ion-chip>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>
+
+---
+
+* editar CSS da página 'eventos-list'
+
+ion-chip {
+    font-size: 0.8em;
+}
+
+---
+
+* editar página 'eventos-list' para navegar para página 'eventos-create'
+
+  eventos: Evento[] = [];
+
+  constructor(
+    private eventosService: EventosService,
+    private navController: NavController,
+  ) { }
+
+  ngOnInit() {
+  }
+
+  ionViewWillEnter() {
+    this.doLoadEventos();
+  }
+
+  doLoadEventos() {
+    this.eventosService.consultarEventos().subscribe((eventos) => {
+      this.eventos = eventos;
+    });
+  }
+
+  doRemover(codigo: string) {
+    this.eventosService.removerEvento(codigo).subscribe((eventos) => {
+      this.eventos = eventos;
+    });
+  }
+
+  doIncluir() {
+    this.navController.navigateForward('eventos-create');
+  }
+}
+
+---
+
+* criar página 'eventos-create'
+
+ionic generate page pages/eventos/eventos-create
+
+---
+
+* editar página 'eventos-create.page.html' para adicionar cabeçalho
+
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Novo evento</ion-title>
+
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+
+    <ion-buttons slot="primary">
+      <ion-button color="dark" (click)="doSalvar()">
+        <ion-icon slot="icon-only" name="save"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+---
+
+* adicionar ReactiveFormsModule nos 'imports' do arquivo 'eventos-create.module.ts'
+
+@NgModule({
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    IonicModule,
+    RouterModule.forChild(routes)
+  ],
+  declarations: [EventosCreatePage]
+})
+export class EventosCreatePageModule { }
+
+---
+
+* editar página 'eventos-create.page.html' para criar formulário
+
+<ion-content padding>
+
+  <form [formGroup]="novoEventoForm">
+    <ion-list>
+      <ion-item>
+        <ion-input type="text" formControlName="codigo" placeholder="Código" clearInput></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-input type="text" formControlName="titulo" placeholder="Título" clearInput></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Tipo</ion-label>
+        <ion-select formControlName="tipo" placeholder="Selecione">
+          <ion-select-option value="Meet Up">Meet Up</ion-select-option>
+          <ion-select-option value="Workshop">Workshop</ion-select-option>
+          <ion-select-option value="Congresso">Congresso</ion-select-option>
+          <ion-select-option value="Conferência">Conferência</ion-select-option>
+          <ion-select-option value="Hands On">Hands On</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-input type="text" formControlName="local" placeholder="Local" clearInput></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-input type="text" formControlName="data" placeholder="Data" clearInput></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Pago</ion-label>
+        <ion-toggle formControlName="pago"></ion-toggle>
+      </ion-item>
+    </ion-list>
+  </form>
+
+</ion-content>
+
+---
+
+* editar página 'eventos-create.page.ts' para implementar eventos
+
+  novoEventoForm: FormGroup;
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private navController: NavController,
+    private eventosService: EventosService,
+  ) {
+    this.novoEventoForm = this.formBuilder.group({
+      codigo: ['', Validators.required],
+      titulo: ['', Validators.required],
+      tipo: ['', Validators.required],
+      local: ['', Validators.required],
+      data: ['', Validators.required],
+      pago: ['false'],
+    });
+  }
+
+  ngOnInit() {
+  }
+
+  doSalvar() {
+    let novoEvento = this.novoEventoForm.getRawValue() as Evento;
+
+    console.log(novoEvento);
+
+    this.eventosService.salvarEvento(novoEvento).subscribe((eventos) => {
+      this.navController.navigateBack('eventos-list');
+    });
+  }
+}
