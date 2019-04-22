@@ -1,0 +1,79 @@
+
+1. editar 'app.module.ts' para adicionar dependência de HttpClientModule
+
+    import { HttpClientModule } from '@angular/common/http';
+
+    ...
+
+    ReactiveFormsModule,
+    HttpClientModule,
+    IonicModule.forRoot(),
+
+2. editar classe 'eventos.service.ts' para adicionar dependência de HttpClient
+
+    import { HttpClient } from '@angular/common/http';
+
+    ...
+
+    static readonly BASE_URL: string = 'http://10.1.1.3:8090/api/meus-estudos/';
+
+    constructor(
+      private preferencesService: PreferencesService,
+      private http: HttpClient,
+    ) { }
+
+3. editar classe 'eventos.service.ts' para implementar método de sincronismo de eventos (chamada de API)
+
+  sincronizarEventos(): Observable<Evento[]> {
+    return Observable.create((observer: any) => {
+      this.http.get<Evento[]>(EventosService.BASE_URL + 'eventos').subscribe((eventos: Evento[]) => {
+        console.log(eventos);
+
+        this.salvarEventos(eventos).subscribe((eventos: Evento[]) => {
+          observer.next(eventos);
+        });
+      });
+    });
+  }
+
+  salvarEventos(novosEventos: Evento[]): Observable<Evento[]> {
+    return Observable.create((observer: any) => {
+      this.preferencesService.get('eventos').subscribe((eventos: Evento[]) => {
+        if (eventos === undefined || eventos === null) {
+          eventos = [];
+        }
+
+        if (novosEventos && novosEventos.length > 0) {
+          novosEventos.forEach(function (novoEvento: Evento) {
+            eventos = eventos.filter(evento => evento.codigo !== novoEvento.codigo);
+          });
+        }
+
+        eventos = eventos.concat(novosEventos);
+
+        this.preferencesService.save('eventos', eventos).subscribe(() => {
+          observer.next(eventos);
+        });
+      });
+    });
+  }
+
+4. editar página 'eventos-list.page.html' para incluir botão de sincronismo
+
+    <ion-buttons slot="primary">
+      <ion-button color="dark" (click)="doIncluir()">
+        <ion-icon slot="icon-only" name="add-circle"></ion-icon>
+      </ion-button>
+
+      <ion-button color="dark" (click)="doSincronizar()">
+        <ion-icon slot="icon-only" name="sync"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+ 5. editar classe 'eventos-list.page.ts' para implementar método de sincronismo de eventos (chamada de Service)
+
+  doSincronizar() {
+    this.eventosService.sincronizarEventos().subscribe((eventos) => {
+      this.eventos = eventos;
+    });
+  }
