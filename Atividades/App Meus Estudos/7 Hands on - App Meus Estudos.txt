@@ -1,0 +1,40 @@
+
+* editar classe 'eventos.service.ts'
+
+- alterar método 'salvarEventos'
+
+  salvarEventos(novosEventos: Evento[]): Observable<Evento[]> {
+    return Observable.create((observer: any) => {
+      this.preferencesService.save('eventos', novosEventos).subscribe(() => {
+        observer.next(novosEventos);
+      });
+    ...
+
+- alterar método 'salvarEvento'
+
+  salvarEvento(novoEvento: Evento): Observable<Evento[]> {
+    return Observable.create((observer: any) => {
+      this.http.post<Evento>(EventosService.BASE_URL + 'eventos', novoEvento)
+        .subscribe((eventoGerado: Evento) => {
+          console.log(eventoGerado);
+
+          this.sincronizarEventos().subscribe((eventos: Evento[]) => {
+            observer.next(eventos);
+          });
+        });
+    ...
+
+- alterar método 'removerEvento'
+
+  removerEvento(codigo: string): Observable<Evento[]> {
+    return Observable.create((observer: any) => {
+      this.http.delete<Evento>(EventosService.BASE_URL + 'eventos/' + codigo)
+        .subscribe((eventoRemovido: Evento) => {
+          console.log(eventoRemovido);
+
+          this.sincronizarEventos().subscribe((eventos: Evento[]) => {
+            observer.next(eventos);
+          });
+        });
+    ...
+
