@@ -1,0 +1,247 @@
+
+1. Descompactar os arquivos (do pendrive) no drive C:\
+
+2. Atualizar caminho de configuração no Apache Maven
+- Arquivo ..\fema_backend\apache-maven-3.0.4\conf\settings.xml
+	<localRepository>C:\desenvmovel\fema_backend\apache-maven-repository</localRepository>
+
+3. Atualizar arquivo 'eclipse.ini' (configurações do Eclipse IDE)
+
+-vm
+C:\desenvmovel\fema_backend\jdk1.8.0_161\bin\javaw.exe
+...
+-javaagent:C:\desenvmovel\fema_backend\eclipse\lombok.jar
+
+4. Inicializar Eclipse IDE com workspace correta ("C:\desenvmovel\fema_backend\workspace")
+
+5. Atualizar configuração do Eclipse IDE (Apache Maven)
+	Window > Preferences > Maven > User Settings (Global Settings e User Settings)
+	"C:\desenvmovel\fema_backend\apache-maven-3.0.4\conf\settings.xml"
+
+6. Acessar Spring Initializr (criar projeto inicial com Spring Boot) - fazer download e importar no Eclipse IDE
+	https://start.spring.io/
+	
+	Maven Project + Java + 2.1.4 + "br.edu.fema" (Group Id) + "meus-estudos-apis" (Artifact Id)
+	Dependencies: Web, DevTools, Lombok
+
+7. Editar "pom.xml" para acrescentar dependências Springfox (documentações de RESTs para Spring Boot)
+
+	<dependency>
+		<groupId>io.springfox</groupId>
+		<artifactId>springfox-swagger2</artifactId>
+		<version>2.8.0</version>
+		<scope>compile</scope>
+	</dependency>
+
+	<dependency>
+		<groupId>io.springfox</groupId>
+		<artifactId>springfox-swagger-ui</artifactId>
+		<version>2.8.0</version>
+		<scope>compile</scope>
+	</dependency>
+
+8. Executar Maven build com instrução "clean install" e "Update Snapshots"
+	Botão direito no projeto > Run As > Maven build (informar "clean install" como goals)
+
+9. Editar "application.properties" (diretório "src/main/resources")
+
+# Server config
+server.port=9090
+server.servlet.context-path=/meus-estudos
+
+10. Implementar HelloWorldController (classe que representa API de exemplo para Hello World)
+
+	@Controller
+	@RequestMapping("/api/hello")
+	public class HelloWorldController {
+
+		@RequestMapping(method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
+		@ResponseBody
+		public String hello() {
+			return "Hello, FEMA";
+		}
+
+		@RequestMapping(value = "/{name}", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
+		@ResponseBody
+		public String getHelloPath(@PathVariable("name") String name) {
+			return "Hello, " + name + "!";
+		}
+
+	}
+
+11. Executar classe MeusEstudosApplication (ou MeusEstudosApisApplication)
+	Simular requisições para:
+		http://localhost:9090/meus-estudos/api/hello
+		http://localhost:9090/meus-estudos/api/hello/Guilherme Farto
+
+12. Implementar SwaggerConfig (classe responsável pela documentação das APIs REST do projeto)
+
+@Configuration
+@EnableSwagger2
+public class SwaggerConfig {
+
+	public static final Contact DEFAULT_CONTACT = new Contact("FEMA - Meus Estudos APIs", "http://www.fema.edu.br",
+			"guilherme.farto@gmail.com");
+
+	@Bean
+	public Docket api() {
+		return new Docket(DocumentationType.SWAGGER_2).apiInfo(this.getApiInfo()).useDefaultResponseMessages(false)
+				.select()
+				.apis(Predicates.and(RequestHandlerSelectors.basePackage("br.edu.fema.meusestudosapis.controllers")))
+				.build();
+	}
+
+	private ApiInfo getApiInfo() {
+		return new ApiInfoBuilder().title("Meus Estudos APIs")
+				.description("Desenvolvimento de Aplicações Móveis e APIs").version("1.0.0").contact(DEFAULT_CONTACT)
+				.build();
+	}
+
+	@Bean
+	public UiConfiguration uiConfig() {
+		return UiConfigurationBuilder.builder().filter(true).docExpansion(DocExpansion.LIST)
+				.defaultModelRendering(ModelRendering.EXAMPLE).deepLinking(true).defaultModelsExpandDepth(1)
+				.defaultModelExpandDepth(1).tagsSorter(TagsSorter.ALPHA).operationsSorter(OperationsSorter.ALPHA)
+				.displayRequestDuration(true).showExtensions(true).build();
+	}
+
+}
+
+13. Acessar páginas (URLs) para consultar documentação gerada para APIs REST
+	http://localhost:9090/meus-estudos/v2/api-docs
+	http://localhost:9090/meus-estudos/swagger-ui.html
+
+14. Implementar EventoVO (classe de modelo/entidade para Evento)
+
+@ApiModel(value = "Evento", description = "Representa uma entidade de evento")
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Builder
+public class EventoVO {
+
+	@ApiModelProperty(value = "Código do evento")
+	private String codigo;
+
+	@ApiModelProperty(value = "Título do evento")
+	private String titulo;
+
+	@ApiModelProperty(value = "Tipo do evento")
+	private String tipo;
+
+	@ApiModelProperty(value = "Local do evento")
+	private String local;
+
+	@ApiModelProperty(value = "Data do evento")
+	private String data;
+
+	@ApiModelProperty(value = "Categoria do evento (pago ou gratuito)")
+	private boolean pago;
+
+}
+
+15. Implementar EventoBO (classe de negócio com mock de persistência)
+
+@Service
+public class EventoBO {
+
+	private static Map<String, EventoVO> eventos = new LinkedHashMap<String, EventoVO>();
+
+	public List<EventoVO> getEventos() {
+		return new LinkedList<>(eventos.values());
+	}
+
+	public EventoVO insertEvento(EventoVO evento) {
+		evento.setCodigo(AbstractVO.generateGUID());
+
+		eventos.put(evento.getCodigo(), evento);
+
+		return evento;
+	}
+
+	public EventoVO updateEvento(EventoVO evento) {
+		if (eventos.containsKey(evento.getCodigo())) {
+			eventos.put(evento.getCodigo(), evento);
+
+			return evento;
+		}
+
+		return null;
+	}
+
+	public EventoVO deleteEvento(String codigo) {
+		if (eventos.containsKey(codigo)) {
+			EventoVO evento = eventos.get(codigo);
+
+			eventos.remove(codigo);
+
+			return evento;
+		}
+
+		return null;
+	}
+
+}
+
+16. Implementar EventoController (classe que representa API para Evento)
+
+@Controller
+@RequestMapping("/api/eventos")
+public class EventoController {
+
+	@Autowired
+	private EventoBO eventoBO;
+
+	@ApiOperation("Recupera todos os eventos")
+	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<List<EventoVO>> getEventos() {
+		return ResponseEntity.ok(this.eventoBO.getEventos());
+	}
+
+	@ApiOperation("Insere um novo evento")
+	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<EventoVO> insertEvento(@RequestBody EventoVO evento) {
+		EventoVO result = this.eventoBO.insertEvento(evento);
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(result);
+	}
+
+	@ApiOperation("Atualiza um evento pelo {codigo}")
+	@RequestMapping(value = "/{codigo}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<EventoVO> updateEvento(@PathVariable("codigo") String codigo, @RequestBody EventoVO evento) {
+		evento.setCodigo(codigo);
+
+		EventoVO result = this.eventoBO.updateEvento(evento);
+
+		if (result != null) {
+			return ResponseEntity.ok(result);
+		}
+
+		return ResponseEntity.notFound().build();
+	}
+
+	@ApiOperation("Remove um evento pelo {codigo}")
+	@RequestMapping(value = "/{codigo}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<EventoVO> deleteEvento(@PathVariable("codigo") String codigo) {
+		EventoVO result = this.eventoBO.deleteEvento(codigo);
+
+		if (result != null) {
+			return ResponseEntity.ok(result);
+		}
+
+		return ResponseEntity.notFound().build();
+	}
+
+}
+
+---
+
+Atividade (para 13/5):
+
+1. Implementar duas novas APIs no contexto do projeto "Meus Estudos"
+   - Utilizar tipos de dados (para VO): String, Date, boolean e BigDecimal
+   - Criar VO, BO e Controller (API)
