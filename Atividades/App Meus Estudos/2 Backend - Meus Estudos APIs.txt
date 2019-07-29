@@ -1,0 +1,90 @@
+
+1. Download h2 (http://www.h2database.com/html/download.html)
+
+2. Atualização de dependências no pom.xml
+
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-data-jpa</artifactId>
+	</dependency>
+
+	<dependency>
+		<groupId>com.h2database</groupId>
+		<artifactId>h2</artifactId>
+		<scope>runtime</scope>
+	</dependency>
+
+3. Configuração de datasource no application.properties
+
+	spring.h2.console.enabled=true
+	spring.h2.console.path=/h2-console
+	spring.datasource.url=jdbc:h2:file:C:/desenvmovel/h2/bin/data/meus-estudos
+	spring.datasource.driverClassName=org.h2.Driver
+	spring.datasource.username=sa
+	spring.datasource.password=admin
+	spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+	spring.jpa.hibernate.ddl-auto=update
+
+4. Modificação na entidade "EventoVO"
+
+	@Entity
+	@Table(name = "eventos")
+	public class EventoVO {
+	...
+
+		@Id
+		private String codigo;
+
+5. Criação de classe de persistência/repositório "EventoRepository"
+
+	public interface EventoRepository extends PagingAndSortingRepository<EventoVO, String> {
+	}
+
+6. Modificação na classe de negócio "EventoBO"
+
+	@Autowired
+	private EventoRepository repository;
+
+	public List<EventoVO> getEventos() {
+		List<EventoVO> eventos = new LinkedList<>();
+
+		this.repository.findAll().forEach(evento -> eventos.add(evento));
+
+		return eventos;
+	}
+
+	public EventoVO insertEvento(EventoVO evento) {
+		evento.setCodigo(UUID.randomUUID().toString());
+
+		this.repository.save(evento);
+
+		return evento;
+	}
+
+	public EventoVO updateEvento(EventoVO evento) {
+		if (this.repository.findById(evento.getCodigo()).isPresent()) {
+			this.repository.save(evento);
+
+			return evento;
+		}
+
+		return null;
+	}
+
+	public EventoVO deleteEvento(String codigo) {
+		if (this.repository.findById(codigo).isPresent()) {
+			EventoVO evento = this.repository.findById(codigo).get();
+
+			this.repository.deleteById(codigo);
+
+			return evento;
+		}
+
+		return null;
+	}
+
+7. Execução e testes
+
+http://localhost:9090/meus-estudos/swagger-ui.html#/
+
+http://localhost:9090/meus-estudos/h2-console/
