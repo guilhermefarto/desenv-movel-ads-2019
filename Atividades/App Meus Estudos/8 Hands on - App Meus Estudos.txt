@@ -1,0 +1,292 @@
+
+1. Alterar página 'home.page.html'
+
+    <ion-row>
+      <ion-col>
+        <ion-button color="primary" expand="full" (click)="doExibirLivros()">Livros</ion-button>
+      </ion-col>
+    </ion-row>
+
+2. Alterar implementação de 'home.page.ts'
+
+  doExibirLivros() {
+    this.navController.navigateForward('livros-list');
+  }
+
+3. Criar classe 'Livro.ts'
+
+	export class Livro {
+
+	    isbn: string;
+	    titulo: string;
+	    autor: string;
+	    quantidadePaginas: number;
+	    categoria: string;
+
+	}
+
+4. Criar serviço/provedor para regras de livro (chamada de APIs)
+
+	ionic generate service ../providers/livros/livros
+
+5. Implementar métodos para chamadas de APIs na classe 'LivrosService.ts'
+
+  static readonly BASE_URL: string = 'http://localhost:9090/meus-estudos/api/';
+
+  constructor(
+    private preferencesService: PreferencesService,
+    private http: HttpClient,
+  ) { }
+
+  sincronizarLivros(): Observable<Livro[]> {
+    return Observable.create((observer: any) => {
+      this.http.get<Livro[]>(LivrosService.BASE_URL + 'livros')
+        .subscribe((livros: Livro[]) => {
+          console.log(livros);
+
+          this.salvarLivros(livros).subscribe((livros: Livro[]) => {
+            observer.next(livros);
+          });
+        });
+    });
+  }
+
+  salvarLivros(novosLivros: Livro[]): Observable<Livro[]> {
+    return Observable.create((observer: any) => {
+      this.preferencesService.save('livros', novosLivros).subscribe(() => {
+        observer.next(novosLivros);
+      });
+    });
+  }
+
+  consultarLivros(): Observable<Livro[]> {
+    return Observable.create((observer: any) => {
+      this.preferencesService.get('livros').subscribe((livros: Livro[]) => {
+        observer.next(livros);
+      });
+    });
+  }
+
+  salvarLivro(novoLivro: Livro): Observable<Livro[]> {
+    return Observable.create((observer: any) => {
+      this.http.post<Livro>(LivrosService.BASE_URL + 'livros', novoLivro)
+        .subscribe((livroGerado: Livro) => {
+          console.log(livroGerado);
+
+          this.sincronizarLivros().subscribe((livros: Livro[]) => {
+            observer.next(livros);
+          });
+        });
+    });
+  }
+
+  removerLivro(isbn: string): Observable<Livro[]> {
+    return Observable.create((observer: any) => {
+      this.http.delete<Livro>(LivrosService.BASE_URL + 'livros/' + isbn)
+        .subscribe((livroRemovido: Livro) => {
+          console.log(livroRemovido);
+
+          this.sincronizarLivros().subscribe((livros: Livro[]) => {
+            observer.next(livros);
+          });
+        });
+    });
+  }
+
+6. Criar página 'livros-list.page.html'
+
+	ionic generate page pages/livros/livros-list
+
+7. Alterar implementação de 'livros-list.page.html'
+
+	<ion-header>
+	  <ion-toolbar>
+	    <ion-title>Livros</ion-title>
+
+	    <ion-buttons slot="start">
+	      <ion-back-button></ion-back-button>
+	    </ion-buttons>
+
+	    <ion-buttons slot="primary">
+	      <ion-button color="dark" (click)="doIncluir()">
+	        <ion-icon slot="icon-only" name="add-circle"></ion-icon>
+	      </ion-button>
+
+	      <ion-button color="dark" (click)="doSincronizar()">
+	        <ion-icon slot="icon-only" name="sync"></ion-icon>
+	      </ion-button>
+	    </ion-buttons>
+	  </ion-toolbar>
+	</ion-header>
+
+	<ion-content no-padding>
+
+	  <ion-card *ngFor="let livro of livros">
+	    <ion-card-header>
+	      <ion-card-subtitle>{{livro.titulo}}</ion-card-subtitle>
+
+	      <ion-buttons float-right>
+	        <ion-button fill="clear" color="danger" (click)="doRemover(livro.isbn)" size="small">
+	          <ion-icon name="remove-circle"></ion-icon>
+	        </ion-button>
+	      </ion-buttons>
+	    </ion-card-header>
+
+	    <ion-card-content>
+	      <ion-row>
+	        {{livro.isbn}} - {{livro.autor}}
+	      </ion-row>
+
+	      <ion-row>
+	        <ion-chip color="primary">
+	          <ion-icon name="navigate"></ion-icon>
+	          <ion-label>{{livro.categoria}}</ion-label>
+	        </ion-chip>
+
+	        <ion-chip color="success">
+	          <ion-icon name="navigate"></ion-icon>
+	          <ion-label>{{livro.quantidadePaginas}}</ion-label>
+	        </ion-chip>
+	      </ion-row>
+	    </ion-card-content>
+	  </ion-card>
+
+	</ion-content>
+
+8. Alterar implementação de 'livros-list.page.ts'
+
+  livros: Livro[] = [];
+
+  constructor(
+    private livrosService: LivrosService,
+    private navController: NavController,
+  ) { }
+
+  ngOnInit() {
+  }
+
+  ionViewWillEnter() {
+    this.doLoadLivros();
+  }
+
+  doLoadLivros() {
+    this.livrosService.consultarLivros().subscribe((livros) => {
+      this.livros = livros;
+    });
+  }
+
+  doRemover(isbn: string) {
+    this.livrosService.removerLivro(isbn).subscribe((livros) => {
+      this.livros = livros;
+    });
+  }
+
+  doIncluir() {
+    this.navController.navigateForward('livros-create');
+  }
+
+  doSincronizar() {
+    this.livrosService.sincronizarLivros().subscribe((livros) => {
+      this.livros = livros;
+    });
+  }
+
+9. Criar página 'livros-create.page.html'
+
+	ionic generate page pages/livros/livros-create
+
+10. Alterar implementação de 'livros-create.page.html'
+
+	<ion-header>
+	  <ion-toolbar>
+	    <ion-title>Novo livros</ion-title>
+
+	    <ion-buttons slot="start">
+	      <ion-back-button></ion-back-button>
+	    </ion-buttons>
+
+	    <ion-buttons slot="primary">
+	      <ion-button color="dark" (click)="doSalvar()">
+	        <ion-icon slot="icon-only" name="save"></ion-icon>
+	      </ion-button>
+	    </ion-buttons>
+	  </ion-toolbar>
+	</ion-header>
+
+	<ion-content padding>
+
+	  <form [formGroup]="novoLivroForm">
+	    <ion-list>
+	      <ion-item>
+	        <ion-input type="text" formControlName="isbn" placeholder="ISBN" clearInput></ion-input>
+	      </ion-item>
+
+	      <ion-item>
+	        <ion-input type="text" formControlName="titulo" placeholder="Título" clearInput></ion-input>
+	      </ion-item>
+
+	      <ion-item>
+	        <ion-input type="text" formControlName="autor" placeholder="Autor" clearInput></ion-input>
+	      </ion-item>
+
+	      <ion-item>
+	        <ion-input type="text" formControlName="quantidadePaginas" placeholder="Qtde. de Páginas" clearInput>
+	        </ion-input>
+	      </ion-item>
+
+	      <ion-item>
+	        <ion-input type="text" formControlName="categoria" placeholder="Categoria" clearInput></ion-input>
+	      </ion-item>
+	    </ion-list>
+	  </form>
+
+	</ion-content>
+
+11. Alterar implementação de 'livros-create.module.ts' para adicionar importação de 'ReactiveFormsModule'
+
+	@NgModule({
+	  imports: [
+	    CommonModule,
+	    FormsModule,
+	    ReactiveFormsModule,
+	    IonicModule,
+	    RouterModule.forChild(routes)
+	  ],
+	  declarations: [LivrosCreatePage]
+	})
+	export class LivrosCreatePageModule { }
+
+12. Alterar implementação de 'livros-create.page.ts'
+
+  novoLivroForm: FormGroup;
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private navController: NavController,
+    private livrosService: LivrosService,
+  ) {
+    this.novoLivroForm = this.formBuilder.group({
+      isbn: ['', Validators.required],
+      titulo: ['', Validators.required],
+      autor: ['', Validators.required],
+      quantidadePaginas: ['', Validators.required],
+      categoria: ['', Validators.required],
+    });
+  }
+
+  ngOnInit() {
+  }
+
+  doSalvar() {
+    const novoLivro = this.novoLivroForm.getRawValue() as Livro;
+
+    console.log(novoLivro);
+
+    this.livrosService.salvarLivro(novoLivro).subscribe((livros) => {
+      this.navController.navigateBack('livros-list');
+    });
+  }
+
+-----
+
+ionic serve --lab
