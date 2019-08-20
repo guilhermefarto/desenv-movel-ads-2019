@@ -4,6 +4,10 @@ https://www.chartjs.org/docs/latest/charts/
 
 -----
 
+```npm install chart.js --save```
+
+-----
+
   <ion-card>
     <ion-card-header>Qtde. de livros por categorias</ion-card-header>
     <ion-card-content>
