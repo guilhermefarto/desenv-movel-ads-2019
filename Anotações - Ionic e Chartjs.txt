@@ -8,6 +8,10 @@ npm install chart.js --save
 
 -----
 
+import { Chart } from 'chart.js';
+
+-----
+
   <ion-card>
     <ion-card-header>Qtde. de livros por categorias</ion-card-header>
     <ion-card-content>
