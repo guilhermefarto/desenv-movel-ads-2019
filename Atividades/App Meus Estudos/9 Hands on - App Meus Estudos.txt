@@ -1,0 +1,62 @@
+
+1. Implementar método "quantidadeLivrosPorCategoria" no provider/service "LivrosService"
+
+  quantidadeLivrosPorCategoria(): Observable<any> {
+    return Observable.create((observer: any) => {
+      this.http.get<any>(LivrosService.BASE_URL + 'livros/quantidadeLivrosPorCategoria')
+        .subscribe((quantidadeLivrosPorCategoria: any) => {
+          observer.next(quantidadeLivrosPorCategoria);
+        });
+    });
+  }
+
+2. Modificar classe "LivrosListPage"
+
+  labels: Array<string> = [];
+  data: Array<number> = [];
+  colors: Array<string> = [];
+
+  ngOnInit() {
+    this.livrosService.quantidadeLivrosPorCategoria().subscribe((data) => {
+      console.log(data);
+
+      this.labels = data.map(item => item.categoria);
+      this.data = data.map(item => item.quantidadeLivros);
+      this.colors = ['rgba(255, 99, 132, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 159, 64, 0.2)'];
+
+      this.barChart = new Chart(this.barCanvas.nativeElement, {
+        type: 'bar',
+        data: {
+          labels: this.labels,
+          datasets: [
+            {
+              label: '# de livros',
+              data: this.data,
+              backgroundColor: this.colors,
+              borderWidth: 1
+            }
+          ]
+        },
+        options: {
+          scales: {
+            yAxes: [
+              {
+                ticks: {
+                  beginAtZero: true
+                }
+              }
+            ]
+          }
+        }
+      });
+    });
+  }
+
+-----
+
+ionic serve --lab

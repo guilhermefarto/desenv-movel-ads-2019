@@ -1,0 +1,59 @@
+
+1. Adicionar dependência Flyway no pom.xml (backend)
+
+	<dependency>
+		<groupId>org.flywaydb</groupId>
+		<artifactId>flyway-core</artifactId>
+	</dependency>
+
+2. Criar diretório "src/main/resources/db/migration"
+
+3. Criar arquivo de inicialização de banco de dados ("V1.0__initialize_schema.sql")
+
+	DELETE FROM LIVROS;
+
+	INSERT INTO LIVROS (ISBN, TITULO, AUTOR, QUANTIDADE_PAGINAS, CATEGORIA) VALUES ('1000', 'Clean Code', 'Robert C. Martin', 440, 'Técnico');
+	INSERT INTO LIVROS (ISBN, TITULO, AUTOR, QUANTIDADE_PAGINAS, CATEGORIA) VALUES ('2000', 'Clean Architecture', 'Robert C. Martin', 432, 'Técnico');
+	INSERT INTO LIVROS (ISBN, TITULO, AUTOR, QUANTIDADE_PAGINAS, CATEGORIA) VALUES ('3000', 'A menina que roubava livros', 'Markus Zusak', 480, 'Romance');
+	INSERT INTO LIVROS (ISBN, TITULO, AUTOR, QUANTIDADE_PAGINAS, CATEGORIA) VALUES ('4000', 'O diário de Anne Frank', 'Anne Frank', 400, 'Romance');
+	INSERT INTO LIVROS (ISBN, TITULO, AUTOR, QUANTIDADE_PAGINAS, CATEGORIA) VALUES ('5000', 'Olga', 'Fernando Morais', 328, 'Biografia');
+	INSERT INTO LIVROS (ISBN, TITULO, AUTOR, QUANTIDADE_PAGINAS, CATEGORIA) VALUES ('6000', 'Steve Jobs', 'Walter Isaacson', 632, 'Biografia');
+	INSERT INTO LIVROS (ISBN, TITULO, AUTOR, QUANTIDADE_PAGINAS, CATEGORIA) VALUES ('7000', 'Os Lusíadas', 'Luís de Camões', 559, 'Poesia');
+	INSERT INTO LIVROS (ISBN, TITULO, AUTOR, QUANTIDADE_PAGINAS, CATEGORIA) VALUES ('8000', 'Dom Quixote', 'Miguel de Cervantes', 96, 'Raros');
+	INSERT INTO LIVROS (ISBN, TITULO, AUTOR, QUANTIDADE_PAGINAS, CATEGORIA) VALUES ('9000', 'Os três mosqueteiros', 'Alexandre Dumas', 144, 'Raros');
+
+4. Remover banco de dados atual ("C:/desenvmovel/h2/bin/data/meus-estudos")
+
+5. Implementar classe "LivroMetrica1"
+
+	@AllArgsConstructor
+	@Data
+	@Builder
+	public class LivroMetrica1 {
+
+	    private String categoria;
+	    private Long quantidadeLivros;
+
+	}
+
+6. Alterar classe "LivroRepository"
+
+    @Query("SELECT new br.edu.fema.meusestudosapis.models.metrics.LivroMetrica1(l.categoria, COUNT(l)) FROM LivroVO l GROUP BY l.categoria ORDER BY COUNT(l) DESC, l.categoria")
+    List<LivroMetrica1> findQuantidadeLivrosPorCategoria();
+
+7. Alterar classe "LivroBO"
+
+    public List<LivroMetrica1> getQuantidadeLivrosPorCategoria() {
+        return this.repository.findQuantidadeLivrosPorCategoria();
+    }
+
+8. Alterar classe ""
+
+    @ApiOperation("Recupera quantidade de livros por categoria")
+    @RequestMapping(value = "/quantidadeLivrosPorCategoria", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<List<LivroMetrica1>> getQuantidadeLivrosPorCategoria() {
+        return ResponseEntity.ok(this.livroBO.getQuantidadeLivrosPorCategoria());
+    }
+
+* Continuação Mobile ("9 Hands on - App Meus Estudos.txt")
