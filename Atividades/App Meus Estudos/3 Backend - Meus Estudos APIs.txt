@@ -47,7 +47,7 @@
         return this.repository.findQuantidadeLivrosPorCategoria();
     }
 
-8. Alterar classe ""
+8. Alterar classe "LivroController"
 
     @ApiOperation("Recupera quantidade de livros por categoria")
     @RequestMapping(value = "/quantidadeLivrosPorCategoria", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
